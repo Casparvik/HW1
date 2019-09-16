@@ -179,7 +179,7 @@ def plot_f_sampled(n=100):
     print(area)
     print(area_bins)
     print(pmf_area)
-    create_plot(pdf_maybe, hist, pmf, title= "F_x")
+    create_plot(pdf_maybe, hist, pmf, title= "F_X")
     return pmf
 
 
