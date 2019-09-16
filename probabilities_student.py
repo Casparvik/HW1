@@ -105,12 +105,17 @@ def plot_gauss_sampled(mu = 0.0, sig = 0.1, x_lim=[-1,1], n = 10):
     function_one = lambda x: gaussian(x, mu, sig)
     area = quad(function_one, x_lim[0], x_lim[1])[0]
     pdf = lambda x: gaussian(x, mu, sig)/area
-    hist = np.linspace(pdf(x_lim[0]), pdf(x_lim[1]), n)
-    print(hist)
-    pmf=area/hist
-    print(area)
+    samp = np.linspace(x_lim[0], x_lim[1], n)
+    hist = pdf(samp)
+    area_bins= sum(hist)
+    pmf = hist/area_bins
+    pmf_area = sum(pmf)
     print(pmf)
-    create_plot(pdf, hist, pmf, title = "Gaussian")
+    print(area)
+    print(hist)
+    print(area_bins)
+    print(pmf_area)
+    create_plot(pdf, hist, pmf, xlim_pf=[x_lim[0],x_lim[1]], title = "Gaussian")
     # begin homework 1 - Problem 1
     # Use a lambda function to create the unnormalized pdf
     # calculate area under curve for pdf
@@ -189,6 +194,7 @@ def plot_pmf_samples(pmf=[0.1, 0.8, 0.1], x_lim=[0,1], n = 10):
 if __name__ == '__main__':
     print("Begin homework 1, problem 1")
     plot_gauss_sampled(mu = 0, sig = 0.1)
+    plot_gauss_sampled(mu = .5, sig = .1, x_lim=[0,1])
     # begin homework 1
     # end homework 1
 
