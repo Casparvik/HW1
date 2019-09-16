@@ -104,8 +104,13 @@ def plot_gauss_sampled(mu = 0.0, sig = 0.1, x_lim=[-1,1], n = 10):
     """
     function_one = lambda x: gaussian(x, mu, sig)
     area = quad(function_one, x_lim[0], x_lim[1])[0]
-    function_two = lambda x: gaussian(x, mu, sig)/area
-    samples = np.linspace(x_lim[-1],x_lim[1],n)
+    pdf = lambda x: gaussian(x, mu, sig)/area
+    hist = np.linspace(pdf(x_lim[0]), pdf(x_lim[1]), n)
+    print(hist)
+    pmf=area/hist
+    print(area)
+    print(pmf)
+    create_plot(pdf, hist, pmf, title = "Gaussian")
     # begin homework 1 - Problem 1
     # Use a lambda function to create the unnormalized pdf
     # calculate area under curve for pdf
