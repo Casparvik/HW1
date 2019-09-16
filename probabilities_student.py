@@ -168,18 +168,19 @@ def plot_f_sampled(n=100):
     def mapping_limits(x, lim_old, lim_new):
         mapped = interp1d(lim_new, lim_old)
         return mapped(x)
-    pdf_maybe = lambda x: (f_x(mapping_limits(x, x_lim_fx, x_lim_pdf)))/area
+
+    pdf_maybe = lambda x: (f_x(mapping_limits(x, x_lim_fx, x_lim_pdf))) / area
     samp = np.linspace(x_lim_pdf[0], x_lim_pdf[1], n)
     hist = (pdf_maybe(samp))
     area_bins = sum(hist)
-    pmf = hist/area_bins
+    pmf = hist / area_bins
     pmf_area = sum(pmf)
     print(hist)
     print(pmf)
     print(area)
     print(area_bins)
     print(pmf_area)
-    create_plot(pdf_maybe, hist, pmf, title= "F_X")
+    create_plot(pdf_maybe, hist, pmf, title="F_X")
     return pmf
 
 
@@ -201,7 +202,25 @@ def plot_pmf_samples(pmf=[0.1, 0.8, 0.1], x_lim=[0, 1], n=10):
 
     # begin homework 1 - Problem 3
     # Generate uniform samples in the range of x_lim (use numpy's uniform function)
+    uniform_samples = np.random.uniform(x_lim[0], x_lim[1], n)
+    boundaries = [pmf[0], pmf[0]+pmf[1], pmf[0]+pmf[1]+ pmf[2]]
+    first_bin_count = 0
+    second_bin_count = 0
+    third_bin_count = 0
+    for i in uniform_samples:
+        if i < boundaries[0]:
+            first_bin_count = first_bin_count + 1
+        if boundaries[0] < i < pmf[1]:
+            second_bin_count = second_bin_count + 1
+        if i > pmf[1]:
+            third_bin_count = third_bin_count + 1
+
+    print(first_bin_count)
+    print(second_bin_count)
+    print(third_bin_count)
+
     # Make the boundaries of the bins by taking a running sum
+
     # Figure out which bin to put each sample in
     # plot the counts using plot_pmf
     # normalize the bin counts and plot
