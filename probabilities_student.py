@@ -30,7 +30,7 @@ def f_x(x_in):
     return p
 
 
-def plot_pmf(ax=None, pmf=[0.1, 0.8, 0.1], x_vals=[-1, 0, 1], title='No title'):
+def plot_pmf(ax = None, pmf = [0.1,0.8,0.1], x_vals=[-1,0,1], title='No title'):
     """
     Plot a pmf as a set of bars
     :param ax: Figure axes. If none, will call subplots
@@ -39,15 +39,12 @@ def plot_pmf(ax=None, pmf=[0.1, 0.8, 0.1], x_vals=[-1, 0, 1], title='No title'):
     :return: None
     """
     if (ax == None):
-        _, ax = plt.subplots(1, 1)
-
-    bar_width = [x_vals[i + 1] - x_vals[i] for i in range(0, len(x_vals) - 1)]
-
+        _, ax = plt.subplots(1,1)
+    bar_width = [ x_vals[i+1] - x_vals[i] for i in range(0,len(x_vals)-1) ]
     # Just set the last width to be the average of the others
-    bar_width.append(np.mean(bar_width))
+    bar_width.append( np.mean(bar_width) )
     ax.bar(x_vals, pmf, width=bar_width, edgecolor='k')
-    ax.set_title(title)
-
+    ax.set_title( title )
 
 def create_plot(pdf=f_x, hist=[0, 1, 0], pmf=[0, 1, 0], xlim_pf=[-1, 1], title='No title'):
     """
@@ -84,8 +81,8 @@ def create_plot(pdf=f_x, hist=[0, 1, 0], pmf=[0, 1, 0], xlim_pf=[-1, 1], title='
     plot_pmf(ax3, pmf, xlim_hist, "{} pmf & pdf".format(title))
     ax3.set_xlabel('x')
     ax3.set_ylabel('prob')
-
     plt.show()
+
 
 
 # A generic Gaussian - note that this is *not* a normalized probability distribution function
@@ -198,34 +195,38 @@ def plot_pmf_samples(pmf=[0.1, 0.8, 0.1], x_lim=[0, 1], n=10):
 
     # Plot the pmf using uniform samples spaced in x
     x_vals = np.linspace(x_lim[0], x_lim[1], len(pmf))
-    plot_pmf(ax1, pmf, x_vals, "PMF")
+    plot_pmf(ax= ax1, pmf=pmf, x_vals=x_vals, title="PMF")
 
     # begin homework 1 - Problem 3
     # Generate uniform samples in the range of x_lim (use numpy's uniform function)
     uniform_samples = np.random.uniform(x_lim[0], x_lim[1], n)
-    boundaries = [pmf[0], pmf[0]+pmf[1], pmf[0]+pmf[1]+ pmf[2]]
-    first_bin_count = 0
-    second_bin_count = 0
-    third_bin_count = 0
-    for i in uniform_samples:
-        if i < boundaries[0]:
-            first_bin_count = first_bin_count + 1
-        if boundaries[0] < i < pmf[1]:
-            second_bin_count = second_bin_count + 1
-        if i > pmf[1]:
-            third_bin_count = third_bin_count + 1
+    boundaries = []
+    sum = 0
+    for i in range(len(pmf)):
+        boundaries.append(sum + pmf[i])
+        sum = sum + pmf[i]
+    print(boundaries)
+    bin_counting = list(np.digitize(uniform_samples, boundaries))
+    print(bin_counting)
+    counters_list = []
+    for n in range(len(pmf)):
+        counters_list.append(bin_counting.count(n))
+    print(counters_list)
+    area = np.sum(counters_list)
 
-    print(first_bin_count)
-    print(second_bin_count)
-    print(third_bin_count)
+    normalized_pmf = counters_list/area
 
     # Make the boundaries of the bins by taking a running sum
 
     # Figure out which bin to put each sample in
     # plot the counts using plot_pmf
+    plot_pmf(ax2, counters_list, x_vals, "Counters")
+    plot_pmf(ax3, normalized_pmf, x_vals, "PMF from Samples")
+    plt.show()
     # normalize the bin counts and plot
     # plot the normalized bin counts
     # end homework 1 - problem 3
+
 
 
 if __name__ == '__main__':
@@ -239,6 +240,6 @@ if __name__ == '__main__':
     pmf = plot_f_sampled(n=15)
 
     print("\nBegin homework 1, problem 3")
-    plot_pmf_samples(pmf, x_lim=[0, 1], n=200)
+    plot_pmf_samples(pmf, x_lim=[0, 1], n=100)
 
     end = input("Hit q to end")
