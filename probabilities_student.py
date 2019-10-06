@@ -104,16 +104,23 @@ def plot_gauss_sampled(mu=0.0, sig=0.1, x_lim=[-1, 1], n=10):
     function_one = lambda x: gaussian(x, mu, sig)
     area = quad(function_one, x_lim[0], x_lim[1])[0]
     pdf = lambda x: gaussian(x, mu, sig) / area
+    area_pdf = quad(pdf, x_lim[0], x_lim[1])[0]
     samp = np.linspace(x_lim[0], x_lim[1], n)
     hist = pdf(samp)
     area_bins = sum(hist)
     pmf = hist / area_bins
     pmf_area = sum(pmf)
-    print(pmf)
+
+
+    print('PDF Area Gaussian:')
     print(area)
-    print(hist)
+    print('PDF Area Normal Distribution:')
+    print(area_pdf)
+    print('Histogram Area')
     print(area_bins)
+    print('PMF Area')
     print(pmf_area)
+    print('End of current step')
     create_plot(pdf, hist, pmf, xlim_pf=[x_lim[0], x_lim[1]], title="Gaussian")
     # begin homework 1 - Problem 1
     # Use a lambda function to create the unnormalized pdf
@@ -125,7 +132,6 @@ def plot_gauss_sampled(mu=0.0, sig=0.1, x_lim=[-1, 1], n=10):
     # Create normalized histogram/pmf
     # Plot
     # Print area answers
-    # end homework 1 - Problem 1
 
 
 # Homework 1 problem 2:
@@ -160,24 +166,32 @@ def plot_f_sampled(n=100):
     # Plot
     # Print area answers
     # end homework 1 - Problem 2
-    area = quad(f_x, x_lim_fx[0], x_lim_fx[1])[0]
+    area1=quad(f_x,x_lim_fx[0],x_lim_fx[1])[0]
 
     def mapping_limits(x, lim_old, lim_new):
         mapped = interp1d(lim_new, lim_old)
         return mapped(x)
 
-    pdf_maybe = lambda x: (f_x(mapping_limits(x, x_lim_fx, x_lim_pdf))) / area
+    pdf = lambda x: (f_x(mapping_limits(x, x_lim_fx, x_lim_pdf))) / area1
+    area = quad(lambda x:(f_x(mapping_limits(x, x_lim_fx, x_lim_pdf))), x_lim_pdf[0], x_lim_pdf[1])[0]
     samp = np.linspace(x_lim_pdf[0], x_lim_pdf[1], n)
-    hist = (pdf_maybe(samp))
+    pdf_maybe = lambda x: (f_x(mapping_limits(x, x_lim_fx, x_lim_pdf)))/area
+    area_pdf = quad(pdf_maybe, x_lim_pdf[0], x_lim_pdf[1])[0]
+    hist = (pdf(samp))
     area_bins = sum(hist)
     pmf = hist / area_bins
     pmf_area = sum(pmf)
-    print(hist)
-    print(pmf)
-    print(area)
+
+
+
+    print('PDF Area Normal Distribution:')
+    print(area_pdf)
+    print('Histogram Area')
     print(area_bins)
+    print('PMF Area')
     print(pmf_area)
-    create_plot(pdf_maybe, hist, pmf, title="F_X")
+    print('End of current step')
+    create_plot(pdf, hist, pmf, title="F_X")
     return pmf
 
 
@@ -205,13 +219,13 @@ def plot_pmf_samples(pmf=[0.1, 0.8, 0.1], x_lim=[0, 1], n=10):
     for i in range(len(pmf)):
         boundaries.append(sum + pmf[i])
         sum = sum + pmf[i]
-    print(boundaries)
+    # print(boundaries)
     bin_counting = list(np.digitize(uniform_samples, boundaries))
-    print(bin_counting)
+    # print(bin_counting)
     counters_list = []
     for n in range(len(pmf)):
         counters_list.append(bin_counting.count(n))
-    print(counters_list)
+    # print(counters_list)
     area = np.sum(counters_list)
 
     normalized_pmf = counters_list/area
@@ -240,6 +254,6 @@ if __name__ == '__main__':
     pmf = plot_f_sampled(n=15)
 
     print("\nBegin homework 1, problem 3")
-    plot_pmf_samples(pmf, x_lim=[0, 1], n=100)
+    plot_pmf_samples(pmf, x_lim=[0, 1], n=5000)
 
     end = input("Hit q to end")
